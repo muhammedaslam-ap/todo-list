@@ -1,6 +1,6 @@
 # Tell Linguist to prioritize TypeScript for .tsx files
 *.tsx linguist-detectable=true
-*.ts linguist-detectable=true
+# *.ts linguist-detectable=true
 
 # Deprioritize CSS files to avoid misclassification
 *.css linguist-detectable=false
