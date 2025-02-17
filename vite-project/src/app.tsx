@@ -1,4 +1,3 @@
-import React from "react";
 import Todolist from './todolist.tsx'
 export default function App() {
     return (
