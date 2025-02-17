@@ -1,0 +1,58 @@
+
+
+.container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: linear-gradient(to right, #a7f3d0, #34d399);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    margin-top: 200px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-left: 100px;
+    padding-right: 100px;
+
+  }
+  
+  .button {
+    padding: 0.5rem 1rem;
+    background: white;
+    color: #059669;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .button:hover {
+    background: #d1fae5;
+  }
+  .inputWrapper{
+    margin-left:80px;
+  }
+  .header{
+    margin-right:25px ;
+  }
+  
+  .fruit-list {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 100px;
+  }
+  
+  .fruit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    transition: background 0.3s ease;
+  }
+
+  
+  .fruit-item:hover {
+    background: #f3f4f6;
+  }
+  
