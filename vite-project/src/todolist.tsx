@@ -1,40 +1,63 @@
-import styles from "./FruitsList.module.css";
-import { useState } from "react";
+import styles from './FruitsList.module.css';
+import { FaArrowUp, FaArrowDown, FaEdit, FaTrash } from "react-icons/fa"; 
+
+import { useState , useEffect} from "react";
 
 interface Fruit {
   id: number;
   name: string;
 }
 
-export default function Todolist() {
+export default function FruitList() {
   const [fruits, setFruits] = useState<Fruit[]>([]);
-  const [fruitName, setFruitName] = useState<string>("");
+  const [fruitName, setFruitName] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
 
-  const addFruit = () => {
-    if (fruitName.trim() !== "") {
-      setFruits([...fruits, { id: Date.now(), name: fruitName }]);
+
+  
+  useEffect(() => {
+    const savedFruits = localStorage.getItem("fruits");
+    if (savedFruits) {
+      setFruits(JSON.parse(savedFruits));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("fruits", JSON.stringify(fruits));
+  }, [fruits]);
+
+
+  const addOrUpdateFruit = () => {
+    if (fruitName.trim()) {
+      if (editingId !== null) {
+        setFruits(fruits.map(fruit => (fruit.id === editingId ? { ...fruit, name: fruitName } : fruit)));
+        setEditingId(null);
+      } else {
+        setFruits([...fruits, { id: Date.now(), name: fruitName }]);
+      }
       setFruitName("");
     }
   };
 
   const removeFruit = (id: number) => {
-    setFruits(fruits.filter((fruit) => fruit.id !== id));
-  };
-
-  const moveUp = (index: number) => {
-    if (index > 0) {
-      const newFruits = [...fruits];
-      [newFruits[index + 1], newFruits[index]] = [newFruits[index], newFruits[index + 1]];
-      setFruits(newFruits);
+    setFruits(fruits.filter(fruit => fruit.id !== id));
+    if (editingId === id) {
+      setFruitName("");
+      setEditingId(null);
     }
   };
 
-  const moveDown = (index: number) => {
-    if (index < fruits.length - 1) {
-      const newFruits = [...fruits];
-      [newFruits[index - 1], newFruits[index]] = [newFruits[index], newFruits[index - 1]];
-      setFruits(newFruits);
-    }
+  const move = (index: number, direction: number) => {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= fruits.length) return;
+    const newFruits = [...fruits];
+    [newFruits[index], newFruits[newIndex]] = [newFruits[newIndex], newFruits[index]];
+    setFruits(newFruits);
+  };
+
+  const startEditing = (fruit: Fruit) => {
+    setFruitName(fruit.name);
+    setEditingId(fruit.id);
   };
 
   return (
@@ -46,10 +69,10 @@ export default function Todolist() {
           className={styles.inputField}
           value={fruitName}
           onChange={(e) => setFruitName(e.target.value)}
-          placeholder="Add a fruit..."
+          placeholder="Add or edit a fruit..."
         />
-        <button onClick={addFruit} className={styles.button}>
-          Add
+        <button onClick={addOrUpdateFruit} className={styles.button}>
+          {editingId !== null ? "Update" : "Add"}
         </button>
       </div>
       <ul className={styles.list}>
@@ -57,15 +80,10 @@ export default function Todolist() {
           <li key={fruit.id} className={styles.listItem}>
             <span className={styles.text}>{fruit.name}</span>
             <div className={styles.actions}>
-              <button onClick={() => moveUp(index)} className={styles.actionButton}>
-                ⬆️
-              </button>
-              <button onClick={() => moveDown(index)} className={styles.actionButton}>
-                ⬇️
-              </button>
-              <button onClick={() => removeFruit(fruit.id)} className={`${styles.actionButton} ${styles.deleteButton}`}>
-                🗑️
-              </button>
+              <button onClick={() => move(index, -1)} ><FaArrowUp/></button>
+              <button onClick={() => move(index, 1)} ><FaArrowDown/></button>
+              <button onClick={() => startEditing(fruit)} ><FaEdit/></button>
+              <button onClick={() => removeFruit(fruit.id)} ><FaTrash/></button>
             </div>
           </li>
         ))}
